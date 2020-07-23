@@ -4,6 +4,7 @@ use crate::constant::success;
 use diesel::*;
 use crate::Conn;
 use crate::view::DeviceView;
+use local_ipaddress;
 
 
 #[get("/device/list")]
@@ -30,4 +31,10 @@ pub fn list_room(conn: Conn) -> JsonValue {
     use super::super::schema::room::dsl::*;
     let rooms: Vec<Room> = room.load::<Room>(&conn.0).expect("error");
     json!(success(rooms))
+}
+
+#[get("/ping")]
+pub fn get_server_ip() -> JsonValue {
+    let ip = local_ipaddress::get().unwrap();
+    json!(success(ip))
 }

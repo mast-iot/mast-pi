@@ -28,6 +28,7 @@ pub fn rocket() -> rocket::Rocket {
              routes::query::list_device,
              routes::query::list_room,
              routes::update::update_param,
+             routes::query::get_server_ip,
         ])
         .attach(Conn::fairing())
 }
