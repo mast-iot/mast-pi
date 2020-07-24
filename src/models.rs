@@ -1,6 +1,10 @@
-use crate::view::DeviceView;
+use crate::view::{DeviceView, RoomView, GroupView};
+use crate::schema::*;
 
-#[derive(Queryable, Debug, Serialize)]
+#[derive(Identifiable, Queryable, Debug, Serialize, Associations)]
+#[belongs_to(Room)]
+#[belongs_to(Group)]
+#[table_name = "device"]
 pub struct Device {
     pub id: i32,
     pub name: String,
@@ -11,20 +15,23 @@ pub struct Device {
     pub group_id: Option<i32>,
 }
 
-#[derive(Queryable, Serialize)]
+#[derive(Identifiable, Queryable, Serialize)]
+#[table_name = "room"]
 pub struct Room {
     pub id: i32,
     pub name: String,
     pub desc: Option<String>,
 }
 
-#[derive(Queryable, Serialize)]
+#[derive(Queryable, Serialize, Identifiable)]
+#[table_name = "group"]
 pub struct Group {
     pub id: i32,
     pub name: String,
 }
 
-#[derive(Queryable, Serialize)]
+#[derive(Queryable, Serialize, Identifiable)]
+#[table_name = "param"]
 pub struct Param {
     pub id: i32,
     pub param_type: String,
@@ -38,7 +45,7 @@ pub struct Param {
 
 
 impl Device {
-    pub fn attach(self, room: Option<Room>, group: Option<Group>) -> DeviceView {
+    pub fn view(self, room: Option<Room>, group: Option<Group>) -> DeviceView {
         DeviceView {
             id: self.id,
             name: self.name,
@@ -47,6 +54,27 @@ impl Device {
             icon: self.icon,
             room,
             group,
+        }
+    }
+}
+
+impl Room {
+    pub fn view(self, devices: Vec<Device>) -> RoomView {
+        RoomView {
+            id: self.id,
+            name: self.name,
+            desc: self.desc,
+            devices,
+        }
+    }
+}
+
+impl Group {
+    pub fn view(self, devices: Vec<Device>) -> GroupView {
+        GroupView {
+            id: self.id,
+            name: self.name,
+            devices,
         }
     }
 }

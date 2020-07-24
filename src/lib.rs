@@ -29,6 +29,8 @@ pub fn rocket() -> rocket::Rocket {
              routes::query::list_room,
              routes::update::update_param,
              routes::query::get_server_ip,
+             routes::query::list_param,
+             routes::query::list_group,
         ])
         .attach(Conn::fairing())
 }
