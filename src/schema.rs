@@ -34,6 +34,7 @@ table! {
     room (id) {
         id -> Integer,
         name -> Text,
+        image -> Text,
         desc -> Nullable<Text>,
     }
 }

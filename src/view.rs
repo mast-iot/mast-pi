@@ -15,6 +15,7 @@ pub struct DeviceView {
 pub struct RoomView {
     pub id: i32,
     pub name: String,
+    pub image: String,
     pub desc: Option<String>,
     pub devices: Vec<Device>,
 }

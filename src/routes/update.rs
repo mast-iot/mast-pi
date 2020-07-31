@@ -1,10 +1,12 @@
 use diesel::*;
-use rocket_contrib::json::{JsonValue, Json};
+use rocket_contrib::json::{Json, JsonValue};
 use serde::Deserialize;
+
 use crate::Conn;
+use crate::models::Param;
+
 use super::super::constant::success;
 use super::super::schema::param::dsl::*;
-use crate::models::Param;
 
 #[derive(Deserialize)]
 pub struct ParamUpdate {
