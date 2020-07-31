@@ -36,6 +36,7 @@ pub struct Group {
 pub struct Param {
     pub id: i32,
     pub param_type: String,
+    pub value_type: String,
     pub key: String,
     pub desc: Option<String>,
     pub options: String,
