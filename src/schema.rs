@@ -21,7 +21,7 @@ table! {
     param (id) {
         id -> Integer,
         param_type -> Text,
-        value_tpye -> Text,
+        value_type -> Text,
         key -> Text,
         desc -> Nullable<Text>,
         options -> Text,

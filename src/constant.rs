@@ -4,9 +4,9 @@ pub const DEFAULT_RESPONSE: &'static str = "{}";
 
 #[derive(Serialize)]
 pub struct Response<T> {
-    code: i16,
-    msg: String,
-    data: T,
+    pub code: i16,
+    pub msg: String,
+    pub data: T,
 }
 
 pub fn success(data: impl Serialize) -> Response<impl Serialize> {
