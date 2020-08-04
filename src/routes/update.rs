@@ -7,8 +7,9 @@ use crate::models::Param;
 
 use super::super::constant::success;
 use super::super::schema::param::dsl::*;
-use crate::auth::{Auth, PassRequired, RequestError};
+use crate::auth::{Auth, PassRequired};
 use rocket::response;
+use crate::config::RequestError;
 
 #[derive(Deserialize)]
 pub struct ParamUpdate {
@@ -25,13 +26,18 @@ pub fn update_param(
 ) -> Result<JsonValue, RequestError> {
     password.validate(&conn, &auth.mobile)?;
     let target = param.filter(id.eq(&param_update.id));
-    let origin: Param = target.get_result::<Param>(&conn.0).expect("record not found");
-    let opts: Vec<String> = origin.options.split(",").map(|s| s.to_string()).collect();
-    if opts.contains(&param_update.value) {
-        diesel::update(target).set(value.eq(&param_update.value)).execute(&conn.0);
-        let response = success(String::from(""));
-        Ok(json!(response))
+    let result: Result<Param, diesel::result::Error> = target.get_result::<Param>(&conn.0);
+    if let Ok(origin) = result {
+        let opts: Vec<String> = origin.options.split(",").map(|s| s.to_string()).collect();
+        if opts.contains(&param_update.value) {
+            diesel::update(target).set(value.eq(&param_update.value)).execute(&conn.0);
+            let response = success(String::from(""));
+            Ok(json!(response))
+        } else {
+            Err(RequestError::internal_error())
+        }
     } else {
-        panic!("value not support!!")
+        Err(RequestError::record_not_found())
     }
+
 }

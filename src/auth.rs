@@ -9,6 +9,7 @@ use rocket::response::status::Custom;
 
 use crate::Conn;
 use crate::models::User;
+use crate::config::RequestError;
 
 pub const SECRET: &'static str = "1U3ILPrtYK8dHKtOGVQdq1QdJqTwr5QM";
 
@@ -48,27 +49,6 @@ fn decode_token(token: &str) -> Option<Auth> {
         .ok()
         .map(|data| data.claims)
 }
-
-#[derive(Debug)]
-pub struct RequestError {
-    code: i16,
-    msg: String,
-}
-
-impl<'r> Responder<'r> for RequestError {
-    fn respond_to(self, request: &Request) -> response::Result<'r> {
-        let response = crate::constant::Response {
-            code: self.code,
-            msg: self.msg,
-            data: (),
-        };
-        Custom(
-            Status::Ok,
-            json!(response),
-        ).respond_to(request)
-    }
-}
-
 
 #[derive(Serialize, Deserialize)]
 pub struct PassRequired {
