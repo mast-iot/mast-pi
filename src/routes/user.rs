@@ -9,6 +9,7 @@ use crate::models::User;
 use crate::config::RequestError;
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct LoginRequest {
     mobile: String,
     password: String,

@@ -12,6 +12,7 @@ use crate::config::RequestError;
 pub const SECRET: &'static str = "1U3ILPrtYK8dHKtOGVQdq1QdJqTwr5QM";
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Auth {
     pub id: i32,
     pub mobile: String,

@@ -1,6 +1,7 @@
 use crate::models::{Device, Group, Room};
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DeviceView {
     pub id: i32,
     pub name: String,
@@ -12,6 +13,7 @@ pub struct DeviceView {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RoomView {
     pub id: i32,
     pub name: String,
@@ -21,6 +23,7 @@ pub struct RoomView {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GroupView {
     pub id: i32,
     pub name: String,
@@ -28,6 +31,7 @@ pub struct GroupView {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserAuthView {
     pub id: i32,
     pub name: String,

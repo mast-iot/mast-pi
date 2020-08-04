@@ -2,6 +2,7 @@ use crate::schema::*;
 use crate::view::{DeviceView, GroupView, RoomView, UserAuthView};
 
 #[derive(Identifiable, Queryable, Debug, Serialize, Associations)]
+#[serde(rename_all = "camelCase")]
 #[belongs_to(Room)]
 #[belongs_to(Group)]
 #[table_name = "device"]
@@ -17,6 +18,7 @@ pub struct Device {
 
 #[derive(Identifiable, Queryable, Serialize)]
 #[table_name = "room"]
+#[serde(rename_all = "camelCase")]
 pub struct Room {
     pub id: i32,
     pub name: String,
@@ -26,6 +28,7 @@ pub struct Room {
 
 #[derive(Queryable, Serialize, Identifiable)]
 #[table_name = "group"]
+#[serde(rename_all = "camelCase")]
 pub struct Group {
     pub id: i32,
     pub name: String,
@@ -33,6 +36,7 @@ pub struct Group {
 
 #[derive(Queryable, Serialize, Identifiable)]
 #[table_name = "param"]
+#[serde(rename_all = "camelCase")]
 pub struct Param {
     pub id: i32,
     pub param_type: String,
@@ -47,6 +51,7 @@ pub struct Param {
 
 #[derive(Queryable, Serialize, Identifiable, Clone)]
 #[table_name = "user"]
+#[serde(rename_all = "camelCase")]
 pub struct User {
     pub id: i32,
     pub name: String,
