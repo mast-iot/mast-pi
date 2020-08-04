@@ -10,7 +10,7 @@ const DATABASE_URL: &'static str = "/data/sqlite/mast.db";
 pub fn config() -> Config {
     let environment = Environment::active().expect("No environment found");
     let port = env::var("MAST_PORT").unwrap_or(String::from("8000")).parse::<u16>().expect("parse port error");
-
+    let address = env::var("MAST_ADDRESS").unwrap_or("localhost".to_string());
     let mut database_config = HashMap::new();
     let mut databases = HashMap::new();
     database_config.insert("url", Value::from(DATABASE_URL));
@@ -19,6 +19,7 @@ pub fn config() -> Config {
     Config::build(environment)
         .environment(environment)
         .port(port)
+        .address(address)
         .extra("databases", databases)
         .finalize()
         .unwrap()
