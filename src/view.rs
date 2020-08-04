@@ -26,3 +26,12 @@ pub struct GroupView {
     pub name: String,
     pub devices: Vec<Device>,
 }
+
+#[derive(Serialize)]
+pub struct UserAuthView {
+    pub id: i32,
+    pub name: String,
+    pub mobile: String,
+    pub image: Option<String>,
+    pub token: String,
+}

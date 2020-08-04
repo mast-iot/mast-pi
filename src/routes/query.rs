@@ -5,7 +5,8 @@ use rocket_contrib::json::JsonValue;
 use crate::Conn;
 use crate::constant::success;
 use crate::models::{Device, Group, Param, Room};
-use crate::view::{DeviceView, RoomView};
+use crate::view::{DeviceView};
+use crate::auth::IpHolder;
 
 #[get("/device/list")]
 pub fn list_device(conn: Conn) -> JsonValue {
@@ -54,4 +55,11 @@ pub fn list_param(dev_id: i32, conn: Conn) -> JsonValue {
 pub fn get_server_ip() -> JsonValue {
     let ip = local_ipaddress::get().unwrap();
     json!(success(ip))
+}
+
+#[get("/pong")]
+pub fn get_client_ip(
+    ip_holder: IpHolder
+) -> JsonValue {
+    json!(ip_holder.ip)
 }

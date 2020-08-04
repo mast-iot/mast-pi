@@ -1,5 +1,5 @@
-use crate::view::{DeviceView, RoomView, GroupView};
 use crate::schema::*;
+use crate::view::{DeviceView, GroupView, RoomView, UserAuthView};
 
 #[derive(Identifiable, Queryable, Debug, Serialize, Associations)]
 #[belongs_to(Room)]
@@ -45,6 +45,16 @@ pub struct Param {
     pub device_id: i32,
 }
 
+#[derive(Queryable, Serialize, Identifiable, Clone)]
+#[table_name = "user"]
+pub struct User {
+    pub id: i32,
+    pub name: String,
+    pub mobile: String,
+    pub image: Option<String>,
+    pub password: String,
+}
+
 
 impl Device {
     pub fn view(self, room: Option<Room>, group: Option<Group>) -> DeviceView {
@@ -78,6 +88,18 @@ impl Group {
             id: self.id,
             name: self.name,
             devices,
+        }
+    }
+}
+
+impl User {
+    pub fn auth_view(self, token: &str) -> UserAuthView {
+        UserAuthView {
+            id: self.id,
+            name: self.name,
+            mobile: self.mobile,
+            image: self.image,
+            token: String::from(token),
         }
     }
 }

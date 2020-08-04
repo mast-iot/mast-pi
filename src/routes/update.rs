@@ -7,6 +7,7 @@ use crate::models::Param;
 
 use super::super::constant::success;
 use super::super::schema::param::dsl::*;
+use crate::auth::{Auth, PassRequired};
 
 #[derive(Deserialize)]
 pub struct ParamUpdate {
@@ -18,7 +19,10 @@ pub struct ParamUpdate {
 pub fn update_param(
     param_update: Json<ParamUpdate>,
     conn: Conn,
+    auth: Auth,
+    password: PassRequired,
 ) -> JsonValue {
+    println!("password is {}", password.password);
     let target = param.filter(id.eq(&param_update.id));
     let origin: Param = target.get_result::<Param>(&conn.0).expect("record not found");
     let opts: Vec<String> = origin.options.split(",").map(|s| s.to_string()).collect();

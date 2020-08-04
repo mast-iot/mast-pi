@@ -8,9 +8,9 @@ extern crate rocket_contrib;
 #[macro_use]
 extern crate serde;
 
-use crate::constant::Response;
 use rocket_contrib::json::JsonValue;
 
+use crate::constant::Response;
 
 pub mod config;
 pub mod sqlite;
@@ -20,12 +20,22 @@ pub mod routes;
 pub mod constant;
 pub mod devices;
 pub mod view;
+pub mod auth;
 
 #[catch(404)]
 fn not_found() -> JsonValue {
     json!(Response{
         code: 404,
         msg: "".to_string(),
+        data: ()
+    })
+}
+
+#[catch(403)]
+fn forbidden() -> JsonValue {
+    json!(Response{
+        code: 403,
+        msg: "forbidden".to_string(),
         data: ()
     })
 }
@@ -42,9 +52,11 @@ pub fn rocket() -> rocket::Rocket {
              routes::query::list_room,
              routes::update::update_param,
              routes::query::get_server_ip,
+             routes::query::get_client_ip,
              routes::query::list_param,
              routes::query::list_group,
+             routes::user::login,
         ])
         .attach(Conn::fairing())
-        .register(catchers![not_found])
+        .register(catchers![not_found , forbidden])
 }

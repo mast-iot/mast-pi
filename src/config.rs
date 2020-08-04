@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use rocket::config::{Value, Environment};
 use rocket::Config;
 
-//const SECRET : &'static str="1U3ILPrtYK8dHKtOGVQdq1QdJqTwr5QM";
 
 const DATABASE_URL: &'static str = "/data/sqlite/mast.db";
 

@@ -40,9 +40,20 @@ table! {
     }
 }
 
+table! {
+    user(id){
+        id -> Integer,
+        name -> Text,
+        mobile -> Text,
+        image -> Nullable<Text>,
+        password -> Text,
+    }
+}
+
 allow_tables_to_appear_in_same_query!(
     device,
     group,
     param,
     room,
+    user,
 );
