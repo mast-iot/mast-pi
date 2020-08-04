@@ -1,8 +1,14 @@
+use diesel::*;
 use jsonwebtoken as jwt;
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Validation};
-use rocket::{Outcome, Request};
+use rocket::{Outcome, Request, Response, response};
 use rocket::http::Status;
 use rocket::request::FromRequest;
+use rocket::response::Responder;
+use rocket::response::status::Custom;
+
+use crate::Conn;
+use crate::models::User;
 
 pub const SECRET: &'static str = "1U3ILPrtYK8dHKtOGVQdq1QdJqTwr5QM";
 
@@ -43,9 +49,42 @@ fn decode_token(token: &str) -> Option<Auth> {
         .map(|data| data.claims)
 }
 
+#[derive(Debug)]
+pub struct RequestError {
+    code: i16,
+    msg: String,
+}
+
+impl<'r> Responder<'r> for RequestError {
+    fn respond_to(self, request: &Request) -> response::Result<'r> {
+        let response = crate::constant::Response {
+            code: self.code,
+            msg: self.msg,
+            data: (),
+        };
+        Custom(
+            Status::Ok,
+            json!(response),
+        ).respond_to(request)
+    }
+}
+
+
 #[derive(Serialize, Deserialize)]
 pub struct PassRequired {
     pub  password: String
+}
+
+impl PassRequired {
+    pub fn validate(self, conn: &Conn, mobile: &String) -> Result<(), RequestError> {
+        use crate::schema::user::dsl::*;
+        let u: User = user.filter(mobile.eq(mobile)).get_result(&conn.0).expect("error");
+        if u.password == self.password {
+            Ok(())
+        } else {
+            Err(RequestError { code: 403, msg: "密码错误".to_string() })
+        }
+    }
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for PassRequired {
@@ -53,7 +92,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for PassRequired {
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, (Status, Self::Error), ()> {
         let local_network = request.headers().get_one("X-Local-Network").unwrap_or("0");
         let password = request.headers().get_one("X-Password").unwrap_or("");
-        if local_network == "0" || password == "" {
+        if local_network == "0" && password == "" {
             Outcome::Failure((Status::Forbidden, ()))
         } else {
             Outcome::Success(PassRequired {

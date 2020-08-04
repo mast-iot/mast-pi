@@ -7,7 +7,8 @@ use crate::models::Param;
 
 use super::super::constant::success;
 use super::super::schema::param::dsl::*;
-use crate::auth::{Auth, PassRequired};
+use crate::auth::{Auth, PassRequired, RequestError};
+use rocket::response;
 
 #[derive(Deserialize)]
 pub struct ParamUpdate {
@@ -21,15 +22,15 @@ pub fn update_param(
     conn: Conn,
     auth: Auth,
     password: PassRequired,
-) -> JsonValue {
-    println!("password is {}", password.password);
+) -> Result<JsonValue, RequestError> {
+    password.validate(&conn, &auth.mobile)?;
     let target = param.filter(id.eq(&param_update.id));
     let origin: Param = target.get_result::<Param>(&conn.0).expect("record not found");
     let opts: Vec<String> = origin.options.split(",").map(|s| s.to_string()).collect();
     if opts.contains(&param_update.value) {
         diesel::update(target).set(value.eq(&param_update.value)).execute(&conn.0);
         let response = success(String::from(""));
-        json!(response)
+        Ok(json!(response))
     } else {
         panic!("value not support!!")
     }
