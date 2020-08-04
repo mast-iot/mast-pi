@@ -54,6 +54,13 @@ impl RequestError {
     pub fn parameter_error() -> Self {
         error_500("请求参数有误")
     }
+
+    pub fn auth_failed() -> Self {
+        RequestError {
+            code: 403,
+            msg: "鉴权失败".to_string(),
+        }
+    }
 }
 
 impl<'r> Responder<'r> for RequestError {

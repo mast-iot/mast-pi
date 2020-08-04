@@ -3,10 +3,10 @@ use diesel::*;
 use rocket_contrib::json::{Json, JsonValue};
 
 use crate::auth::Auth;
-use crate::auth::SECRET;
 use crate::Conn;
 use crate::constant::success;
 use crate::models::User;
+use crate::config::RequestError;
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
@@ -18,15 +18,19 @@ pub struct LoginRequest {
 pub fn login(
     request: Json<LoginRequest>,
     conn: Conn,
-) -> JsonValue {
+) -> Result<JsonValue, RequestError> {
     use crate::schema::user::dsl::*;
     let user_result: User = user.filter(mobile.eq(&request.mobile)).get_result(&conn.0).expect("error");
     let u = user_result.clone();
-    let token = Auth {
-        id: user_result.id,
-        mobile: user_result.mobile,
-        name: user_result.name,
-        exp: (Utc::now() + Duration::days(1000)).timestamp(),
-    }.token();
-    json!(success(u.auth_view(&token)))
+    if request.password == user_result.password {
+        let token = Auth {
+            id: user_result.id,
+            mobile: user_result.mobile,
+            name: user_result.name,
+            exp: (Utc::now() + Duration::days(1000)).timestamp(),
+        }.token();
+        Ok(json!(success(u.auth_view(&token))))
+    } else {
+        Err(RequestError::auth_failed())
+    }
 }

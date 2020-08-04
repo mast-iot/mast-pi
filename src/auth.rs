@@ -1,11 +1,9 @@
 use diesel::*;
 use jsonwebtoken as jwt;
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Validation};
-use rocket::{Outcome, Request, Response, response};
+use rocket::{Outcome, Request};
 use rocket::http::Status;
 use rocket::request::FromRequest;
-use rocket::response::Responder;
-use rocket::response::status::Custom;
 
 use crate::Conn;
 use crate::models::User;
@@ -56,9 +54,9 @@ pub struct PassRequired {
 }
 
 impl PassRequired {
-    pub fn validate(self, conn: &Conn, mobile: &String) -> Result<(), RequestError> {
+    pub fn validate(self, conn: &Conn, _mobile: &String) -> Result<(), RequestError> {
         use crate::schema::user::dsl::*;
-        let u: User = user.filter(mobile.eq(mobile)).get_result(&conn.0).expect("error");
+        let u: User = user.filter(mobile.eq(_mobile)).get_result(&conn.0).expect("error");
         if u.password == self.password {
             Ok(())
         } else {
