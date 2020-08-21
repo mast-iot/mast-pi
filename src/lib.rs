@@ -56,6 +56,7 @@ pub fn rocket() -> rocket::Rocket {
              routes::query::list_param,
              routes::query::list_group,
              routes::user::login,
+             routes::query::weather,
         ])
         .attach(Conn::fairing())
         .register(catchers![not_found , forbidden])

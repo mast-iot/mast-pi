@@ -7,6 +7,9 @@ use crate::Conn;
 use crate::constant::success;
 use crate::models::{Device, Group, Param, Room};
 use crate::view::DeviceView;
+use jsonwebtoken::errors::ErrorKind::Json;
+use serde_json::Value;
+use serde::export::TryFrom;
 
 #[get("/device/list")]
 pub fn list_device(
@@ -75,4 +78,17 @@ pub fn get_client_ip(
     ip_holder: IpHolder
 ) -> JsonValue {
     json!(ip_holder.ip)
+}
+
+#[get("/weather")]
+pub fn weather() -> JsonValue {
+    use easy_http_request::DefaultHttpRequest;
+    let response = DefaultHttpRequest::get_from_url_str("https://api.openweathermap.org/data/2.5/onecall?lat=30.287716668804674&lon=120.06577596450808\
+    &lang=zh_cn&units=metric&appid=2a49e2d2ff8a324e28c6f717685f55e3")
+        .unwrap().send().unwrap();
+//    let json = include_str!("../../assets/weather.json");
+//    let result = serde_json::from_str(json);
+    let result = serde_json::from_str(String::from_utf8(response.body).unwrap().as_str());
+    let fin: Value = result.unwrap();
+    json!(fin)
 }

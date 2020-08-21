@@ -23,7 +23,7 @@ pub fn login(
 ) -> Result<JsonValue, RequestError> {
     use crate::schema::user::dsl::*;
     let user_result: User = user.filter(mobile.eq(request.mobile.clone()))
-        .get_result::<User>(&conn.0).map_err(|err| error_500("手机号不存在"))?;
+        .get_result::<User>(&conn.0).map_err(|_err| error_500("手机号不存在"))?;
     let u = user_result.clone();
     if request.password.to_lowercase() == user_result.password.to_lowercase() {
         let token = Auth {
