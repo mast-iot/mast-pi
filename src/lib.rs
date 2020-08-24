@@ -21,6 +21,7 @@ pub mod constant;
 pub mod devices;
 pub mod view;
 pub mod auth;
+pub mod gpio;
 
 #[catch(404)]
 fn not_found() -> JsonValue {

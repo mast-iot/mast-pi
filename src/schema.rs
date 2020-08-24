@@ -28,6 +28,8 @@ table! {
         value -> Text,
         usage -> Text,
         device_id -> Integer,
+        in_id-> Nullable(Integer),
+        out_id-> Nullable(Integer),
     }
 }
 
@@ -47,6 +49,20 @@ table! {
         mobile -> Text,
         image -> Nullable<Text>,
         password -> Text,
+    }
+}
+
+table! {
+    input(id){
+        id->Integer,
+        address->Integer,
+    }
+}
+
+table! {
+    output(id){
+        id-> Integer,
+        address->Integer,
     }
 }
 

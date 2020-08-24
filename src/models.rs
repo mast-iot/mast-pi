@@ -47,6 +47,8 @@ pub struct Param {
     pub value: String,
     pub usage: String,
     pub device_id: i32,
+    pub in_id: Option<i32>,
+    pub out_id: Option<i32>,
 }
 
 #[derive(Queryable, Serialize, Identifiable, Clone)]
