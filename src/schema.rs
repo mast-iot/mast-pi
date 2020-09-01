@@ -28,8 +28,8 @@ table! {
         value -> Text,
         usage -> Text,
         device_id -> Integer,
-        in_id-> Nullable(Integer),
-        out_id-> Nullable(Integer),
+        in_id-> Nullable<Integer>,
+        out_id-> Nullable<Integer>,
     }
 }
 
