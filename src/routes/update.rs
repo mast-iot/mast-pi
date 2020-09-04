@@ -2,13 +2,13 @@ use diesel::*;
 use rocket_contrib::json::{Json, JsonValue};
 use serde::Deserialize;
 
-use crate::Conn;
-use crate::models::Param;
-
-use super::super::constant::success;
-use super::super::schema::param::dsl::*;
 use crate::auth::{Auth, PassRequired};
 use crate::config::RequestError;
+use crate::Conn;
+use crate::constant::success;
+use crate::models::{Output, Param};
+use crate::schema::output::dsl::*;
+use crate::schema::param::dsl::*;
 
 #[derive(Deserialize)]
 pub struct ParamUpdate {
@@ -23,20 +23,21 @@ pub fn update_param(
     auth: Auth,
     password: PassRequired,
 ) -> Result<JsonValue, RequestError> {
-    password.validate(&conn, &auth.mobile)?;
-    let target = param.filter(id.eq(&param_update.id));
-    let result: Result<Param, diesel::result::Error> = target.get_result::<Param>(&conn.0);
-    if let Ok(origin) = result {
-        let opts: Vec<String> = origin.options.split(",").map(|s| s.to_string()).collect();
-        if opts.contains(&param_update.value) {
-            let _result = diesel::update(target).set(value.eq(&param_update.value)).execute(&conn.0);
-            let response = success(String::from(""));
-            Ok(json!(response))
-        } else {
-            Err(RequestError::internal_error())
+    // password.validate(&conn, &auth.mobile)?;
+    let target = param.filter(crate::schema::param::id.eq(&param_update.id));
+    let result: Result<Param, _> = target.get_result::<Param>(&conn.0);
+    if let Ok(pm) = result {
+        if pm.out_id.is_some() {
+            let output_id = pm.out_id.unwrap();
+            use crate::schema::output::id as op_id;
+            let op: Output = output.filter(op_id.eq(output_id)).get_result::<Output>(&conn.0).expect("");
+            let v = pm.value.parse::<i32>().unwrap();
+            if op.state == v { return Err(RequestError::parameter_error()); }
         }
+
+
+        Err(RequestError::internal_error())
     } else {
         Err(RequestError::record_not_found())
     }
-
 }

@@ -56,6 +56,7 @@ table! {
     input(id){
         id->Integer,
         address->Integer,
+        state-> Integer,
     }
 }
 
@@ -63,6 +64,7 @@ table! {
     output(id){
         id-> Integer,
         address->Integer,
+        state-> Integer,
     }
 }
 
@@ -72,4 +74,6 @@ allow_tables_to_appear_in_same_query!(
     param,
     room,
     user,
+    input,
+    output,
 );

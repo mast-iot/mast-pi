@@ -7,9 +7,7 @@ use crate::Conn;
 use crate::constant::success;
 use crate::models::{Device, Group, Param, Room};
 use crate::view::DeviceView;
-use jsonwebtoken::errors::ErrorKind::Json;
 use serde_json::Value;
-use serde::export::TryFrom;
 
 #[get("/device/list")]
 pub fn list_device(

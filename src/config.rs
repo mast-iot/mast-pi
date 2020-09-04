@@ -7,7 +7,7 @@ use rocket::http::Status;
 use rocket::response::Responder;
 use rocket::response::status::Custom;
 
-const DATABASE_URL: &'static str = "/data/sqlite/mast.db";
+pub const DATABASE_URL: &'static str = "/data/sqlite/mast.db";
 
 
 pub fn config() -> Config {

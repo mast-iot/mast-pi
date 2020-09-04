@@ -51,6 +51,24 @@ pub struct Param {
     pub out_id: Option<i32>,
 }
 
+#[derive(Queryable, Serialize, Identifiable)]
+#[table_name = "input"]
+#[serde(rename_all = "camelCase")]
+pub struct Input {
+    pub id: u8,
+    pub address: u8,
+    pub state: u8,
+}
+
+#[derive(Queryable, Serialize, Identifiable)]
+#[table_name = "output"]
+#[serde(rename_all = "camelCase")]
+pub struct Output {
+    pub id: i32,
+    pub address: i32,
+    pub state: i32,
+}
+
 #[derive(Queryable, Serialize, Identifiable, Clone)]
 #[table_name = "user"]
 #[serde(rename_all = "camelCase")]

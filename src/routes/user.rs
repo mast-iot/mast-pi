@@ -7,7 +7,6 @@ use crate::Conn;
 use crate::constant::success;
 use crate::models::User;
 use crate::config::{RequestError, error_500};
-use diesel::result::Error;
 
 #[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]

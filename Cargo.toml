@@ -19,6 +19,7 @@ jsonwebtoken="7.2.0"
 chrono = "0.4"
 easy-http-request="0.2.9"
 openssl = { version = "0.10", features = ["vendored"] }
+lazy_static="1.1.1"
 
 [dependencies.rocket_contrib]
 version = "0.4.2"
