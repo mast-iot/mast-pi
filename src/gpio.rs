@@ -49,12 +49,12 @@ impl Io {
         Ok(())
     }
 
-    pub fn flash_out(self) -> Result<()> {
+    pub fn flash_out(&mut self) -> Result<()> {
         let gpio = Gpio::new()?;
         let mut ds_pin = gpio.get(DS)?.into_output();
         let mut st_pin = gpio.get(STCP)?.into_output();
         let mut sh_pin = gpio.get(SHCP)?.into_output();
-        let mut output = self.output.clone();
+        let mut output = self.output;
         let array = &mut [0u8; 128];
         for x in 0usize..128 {
             let mut i = 1u128;
@@ -65,7 +65,8 @@ impl Io {
         array.reverse();
         let mut address = 0u8;
         for x in array.iter() {
-            if *x == 0 {
+            println!("x is {}", *x);
+            if *x == 0u8 {
                 ds_pin.set_low()
             } else {
                 ds_pin.set_high()
@@ -85,12 +86,13 @@ impl Io {
     }
 
     pub fn output_and_flash(&mut self, address: u8, state: u8) {
+        println!("address {} , state {}", address, state);
         let mut op = self.output;
         op = op.rotate_right(address as u32);
         op = (op >> 1 << 1) + state as u128;
         op = op.rotate_left(address as u32);
         self.output = op;
-        Io.flash_out();
+        self.flash_out();
         ()
     }
 }

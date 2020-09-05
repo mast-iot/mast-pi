@@ -22,8 +22,8 @@ pub struct ParamUpdate {
 pub fn update_param(
     param_update: Json<ParamUpdate>,
     conn: Conn,
-    auth: Auth,
-    password: PassRequired,
+    //auth: Auth,
+ //   password: PassRequired,
 ) -> Result<JsonValue, RequestError> {
     // password.validate(&conn, &auth.mobile)?;
     let target = param.filter(crate::schema::param::id.eq(&param_update.id));
@@ -33,13 +33,16 @@ pub fn update_param(
             let output_id = pm.out_id.unwrap();
             use crate::schema::output::id as op_id;
             let op: Output = output.filter(op_id.eq(output_id)).get_result::<Output>(&conn.0).expect("");
-            let v = pm.value.parse::<i32>().unwrap();
-            if op.state == v { return Err(RequestError::parameter_error()); } else {
+            let v = param_update.value.parse::<i32>().unwrap();
+           // if op.state == v { return Err(RequestError::parameter_error()); } else {
                 let mut io: MutexGuard<Io> = GPIO.lock().unwrap();
                 io.output_and_flash(op.address as u8, v as u8);
-            }
+        //    }
+            Err(RequestError::success())
+        }else {
+            Err(RequestError::internal_error())
         }
-        Err(RequestError::internal_error())
+       
     } else {
         Err(RequestError::record_not_found())
     }

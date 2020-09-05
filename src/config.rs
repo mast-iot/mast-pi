@@ -13,7 +13,7 @@ pub const DATABASE_URL: &'static str = "/data/sqlite/mast.db";
 pub fn config() -> Config {
     let environment = Environment::active().expect("No environment found");
     let port = env::var("MAST_PORT").unwrap_or(String::from("8000")).parse::<u16>().expect("parse port error");
-    let address = env::var("MAST_ADDRESS").unwrap_or("localhost".to_string());
+    let address = env::var("MAST_ADDRESS").unwrap_or("127.0.0.1".to_string());
     let mut database_config = HashMap::new();
     let mut databases = HashMap::new();
     database_config.insert("url", Value::from(DATABASE_URL));
@@ -43,6 +43,14 @@ pub fn error_500(msg: &str) -> RequestError {
 }
 
 impl RequestError {
+    
+    pub fn success()-> Self{
+        RequestError {
+            code: 200,
+            msg: "success".to_string(),
+        }
+    }
+    
     pub fn internal_error() -> Self {
         error_500("内部错误")
     }
