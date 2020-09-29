@@ -1,6 +1,9 @@
 build:
 	cargo build --release --target=armv7-unknown-linux-gnueabihf
 
+dev:
+	cargo build --release
+
 
 DEVICE_IP ?= www.theoxao.com
 DEVICE_HOST ?= root@$(DEVICE_IP)

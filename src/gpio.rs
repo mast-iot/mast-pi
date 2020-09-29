@@ -1,12 +1,12 @@
 use std::sync::{Arc, Mutex};
+use std::thread::sleep;
+use std::time::Duration;
 
 use diesel::{Connection, RunQueryDsl, SqliteConnection};
 use rppal::gpio::*;
 
 use crate::config::DATABASE_URL;
 use crate::models::Output;
-use std::thread::sleep;
-use std::time::Duration;
 
 const DS: u8 = 2;
 //to pin14
@@ -71,26 +71,26 @@ impl Io {
             } else {
                 ds_pin.set_high()
             }
-            sleep(Duration::from_micros(100));
+            sleep(Duration::from_micros(20));
             sh_pin.set_high();
-            sleep(Duration::from_micros(100));
+            sleep(Duration::from_micros(20));
             sh_pin.set_low();
-            sleep(Duration::from_micros(100));
+            sleep(Duration::from_micros(20));
             address += 1;
         }
-        sleep(Duration::from_micros(100));
+        sleep(Duration::from_micros(20));
         st_pin.set_high();
-        sleep(Duration::from_micros(100));
+        sleep(Duration::from_micros(20));
         st_pin.set_low();
         Ok(())
     }
 
     pub fn output_and_flash(&mut self, address: u8, state: u8) {
         println!("address {} , state {}", address, state);
-        let mut op = self.output;
-        op = op.rotate_right(address as u32);
-        op = (op >> 1 << 1) + state as u128;
-        op = op.rotate_left(address as u32);
+        let mut op = 0u128;
+        op += state as u128;
+        op = op << 1 + (state ^ 1);
+        op <<= (address) * 2;
         self.output = op;
         self.flash_out();
         ()
