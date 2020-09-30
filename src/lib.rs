@@ -3,13 +3,13 @@
 #[macro_use]
 extern crate diesel;
 #[macro_use]
+extern crate lazy_static;
+#[macro_use]
 extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
 #[macro_use]
 extern crate serde;
-#[macro_use]
-extern crate lazy_static;
 
 use rocket_contrib::json::JsonValue;
 
@@ -62,6 +62,7 @@ pub fn rocket() -> rocket::Rocket {
              routes::user::login,
              routes::query::weather,
         ])
+        .mount("/", routes![routes::query::aligenie])
         .attach(Conn::fairing())
         .register(catchers![not_found , forbidden])
 }

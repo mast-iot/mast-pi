@@ -90,3 +90,8 @@ pub fn weather() -> JsonValue {
     let fin: Value = result.unwrap();
     json!(fin)
 }
+
+#[get("/aligenie/3f171e40295048db07ae54bdb1d11bfc.txt")]
+pub fn aligenie() -> &'static str {
+    "Jfc4Z4Ur15JwUBuvUQD5wg7Nu8+l+HscqYlfofbyJdY20j1PJGSesResskliNDbq"
+}

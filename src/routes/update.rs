@@ -34,7 +34,7 @@ pub fn update_param(
     if let Ok(pm) = result {
         if pm.out_id.is_some() {
             match pm.param_type.as_str() {
-                "power" => { PowerSwitch::handle(&pm, &param_update.value) }
+                "power" => { PowerSwitch::handle(&pm, &param_update.value, &conn.0) }
                 _ => {}
             }
             Err(RequestError::success())
