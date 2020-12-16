@@ -1,4 +1,4 @@
-use crate::models::{Device, Group, Room};
+use crate::models::{Device, Group, Room, Param};
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -38,4 +38,12 @@ pub struct UserAuthView {
     pub mobile: String,
     pub image: Option<String>,
     pub token: String,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RemarkableDeviceView {
+    pub device: Option<DeviceView>,
+    pub param: Option<Param>,
+    pub sort: i32,
 }

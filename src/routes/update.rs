@@ -15,7 +15,7 @@ use crate::models::{Output, Param};
 use crate::schema::output::dsl::*;
 use crate::schema::param::dsl::*;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct ParamUpdate {
     id: i32,
     value: String,
@@ -29,19 +29,20 @@ pub fn update_param(
     //   password: PassRequired,
 ) -> Result<JsonValue, RequestError> {
     // password.validate(&conn, &auth.mobile)?;
-    let target = param.filter(crate::schema::param::id.eq(&param_update.id));
-    let result: Result<Param, _> = target.get_result::<Param>(&conn.0);
-    if let Ok(pm) = result {
-        if pm.out_id.is_some() {
-            match pm.param_type.as_str() {
-                "power" => { PowerSwitch::handle(&pm, &param_update.value, &conn.0) }
-                _ => {}
-            }
-            Err(RequestError::success())
-        } else {
-            Err(RequestError::internal_error())
-        }
-    } else {
-        Err(RequestError::record_not_found())
-    }
+    Err(RequestError::success())
+    // let target = param.filter(crate::schema::param::id.eq(&param_update.id));
+    // let result: Result<Param, _> = target.get_result::<Param>(&conn.0);
+    // if let Ok(pm) = result {
+    //     if pm.out_id.is_some() {
+    //         match pm.param_type.as_str() {
+    //             "power" => { PowerSwitch::handle(&pm, &param_update.value, &conn.0) }
+    //             _ => {}
+    //         }
+    //         Err(RequestError::success())
+    //     } else {
+    //         Err(RequestError::internal_error())
+    //     }
+    // } else {
+    //     Err(RequestError::record_not_found())
+    // }
 }

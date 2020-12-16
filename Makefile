@@ -13,4 +13,4 @@ deploy:
 	ssh $(DEVICE_HOST) 'RUST_BACKTRACE=full RUST_LOG=debug /data/service/start.sh'
 
 
-run: build deploy
+run: dev deploy

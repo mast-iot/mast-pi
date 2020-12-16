@@ -5,8 +5,8 @@ use rocket_contrib::json::JsonValue;
 use crate::auth::{Auth, IpHolder};
 use crate::Conn;
 use crate::constant::success;
-use crate::models::{Device, Group, Param, Room};
-use crate::view::DeviceView;
+use crate::models::{Device, Group, Param, Room, RemarkableDevice};
+use crate::view::{DeviceView, RemarkableDeviceView};
 use serde_json::Value;
 
 #[get("/device/list")]
@@ -25,6 +25,23 @@ pub fn list_device(
         .get_results::<(Device, Option<Room>, Option<Group>)>(&conn.0).expect("error")
         .into_iter().map(|(dev, rm, gp)| dev.view(rm, gp)).collect::<Vec<_>>();
     json!(success(devices))
+}
+
+#[get("/remarkable/list")]
+pub fn remarkable_device_list(
+    conn: Conn
+) -> JsonValue {
+    use super::super::schema::remarkable_device::dsl::*;
+    use super::super::schema::param::dsl::*;
+    use super::super::schema::device::dsl::*;
+    use super::super::schema::param::id as table_param_id;
+    use super::super::schema::device::id as table_device_id;
+    let remark: Vec<RemarkableDeviceView> = remarkable_device
+        .left_join(param.on(param_id.eq(table_param_id)))
+        .left_join(device.on(device_id.eq(table_device_id)))
+        .get_results::<(RemarkableDevice, Option<Param>, Option<Device>)>(&conn.0).expect("error")
+        .into_iter().map(|(rd, pm, dev)| rd.view(pm, dev)).collect::<Vec<_>>();
+    json!(remark)
 }
 
 #[get("/room/list")]
@@ -81,17 +98,12 @@ pub fn get_client_ip(
 #[get("/weather")]
 pub fn weather() -> JsonValue {
     use easy_http_request::DefaultHttpRequest;
-    let response = DefaultHttpRequest::get_from_url_str("https://api.openweathermap.org/data/2.5/onecall?lat=30.287716668804674&lon=120.06577596450808\
-    &lang=zh_cn&units=metric&appid=2a49e2d2ff8a324e28c6f717685f55e3")
-        .unwrap().send().unwrap();
-//    let json = include_str!("../../assets/weather.json");
-//    let result = serde_json::from_str(json);
-    let result = serde_json::from_str(String::from_utf8(response.body).unwrap().as_str());
+    // let response = DefaultHttpRequest::get_from_url_str("https://api.openweathermap.org/data/2.5/onecall?lat=30.287716668804674&lon=120.06577596450808\
+    // &lang=zh_cn&units=metric&appid=2a49e2d2ff8a324e28c6f717685f55e3")
+    //     .unwrap().send().unwrap();
+    let json = include_str!("../../assets/weather.json");
+    let result = serde_json::from_str(json);
+    // let result = serde_json::from_str(String::from_utf8(response.body).unwrap().as_str());
     let fin: Value = result.unwrap();
     json!(fin)
-}
-
-#[get("/aligenie/3f171e40295048db07ae54bdb1d11bfc.txt")]
-pub fn aligenie() -> &'static str {
-    "Jfc4Z4Ur15JwUBuvUQD5wg7Nu8+l+HscqYlfofbyJdY20j1PJGSesResskliNDbq"
 }

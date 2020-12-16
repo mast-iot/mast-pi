@@ -61,12 +61,22 @@ table! {
 }
 
 table! {
+    remarkable_device(id){
+        id->Integer,
+        sort->Integer,
+        param_id->Integer,
+    }
+}
+
+
+table! {
     output(id){
         id-> Integer,
         address->Integer,
         state-> Integer,
     }
 }
+
 
 allow_tables_to_appear_in_same_query!(
     device,
@@ -76,4 +86,5 @@ allow_tables_to_appear_in_same_query!(
     user,
     input,
     output,
+    remarkable_device,
 );

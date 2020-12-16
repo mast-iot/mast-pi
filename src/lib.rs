@@ -10,6 +10,8 @@ extern crate rocket;
 extern crate rocket_contrib;
 #[macro_use]
 extern crate serde;
+#[macro_use]
+extern crate log;
 
 use rocket_contrib::json::JsonValue;
 
@@ -61,8 +63,8 @@ pub fn rocket() -> rocket::Rocket {
              routes::query::list_group,
              routes::user::login,
              routes::query::weather,
+             routes::query::remarkable_device_list,
         ])
-        .mount("/", routes![routes::query::aligenie])
         .attach(Conn::fairing())
         .register(catchers![not_found , forbidden])
 }

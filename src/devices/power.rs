@@ -1,4 +1,6 @@
 use std::sync::MutexGuard;
+use std::sync::{Arc, Mutex};
+
 
 use diesel::{ExpressionMethods, QueryDsl, SqliteConnection, RunQueryDsl};
 
@@ -21,3 +23,10 @@ impl Device for PowerSwitch {
         }
     }
 }
+
+lazy_static! {
+    pub static ref POWER_LOCK: Arc<Mutex<u128>> = Arc::new(Mutex::new(0u128));
+}
+
+
+

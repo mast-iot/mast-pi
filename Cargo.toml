@@ -13,6 +13,7 @@ diesel = { version = "1.4.3", features = ["sqlite", "chrono"] }
 serde = { version = "1.0.103", features = ["derive"] }
 serde_json = "1.0.44"
 dotenv = "0.15.0"
+log = "0.4.8"
 rppal = "0.11.3"           # raspberry gpio in rust
 local_ipaddress = "0.1.3" # 获取本机IP
 jsonwebtoken="7.2.0"

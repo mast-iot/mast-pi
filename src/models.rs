@@ -1,5 +1,5 @@
 use crate::schema::*;
-use crate::view::{DeviceView, GroupView, RoomView, UserAuthView};
+use crate::view::{DeviceView, GroupView, RemarkableDeviceView, RoomView, UserAuthView};
 
 #[derive(Identifiable, Queryable, Debug, Serialize, Associations)]
 #[serde(rename_all = "camelCase")]
@@ -34,7 +34,7 @@ pub struct Group {
     pub name: String,
 }
 
-#[derive(Queryable, Serialize, Identifiable)]
+#[derive(Queryable, Serialize, Identifiable, Associations)]
 #[table_name = "param"]
 #[serde(rename_all = "camelCase")]
 pub struct Param {
@@ -49,6 +49,15 @@ pub struct Param {
     pub device_id: i32,
     pub in_id: Option<i32>,
     pub out_id: Option<i32>,
+}
+
+#[derive(Queryable, Serialize, Identifiable, Associations)]
+#[table_name = "remarkable_device"]
+#[serde(rename_all = "camelCase")]
+pub struct RemarkableDevice {
+    pub id: i32,
+    pub sort: i32,
+    pub param_id: i32,
 }
 
 #[derive(Queryable, Serialize, Identifiable)]
@@ -125,6 +134,18 @@ impl User {
             mobile: self.mobile,
             image: self.image,
             token: String::from(token),
+        }
+    }
+}
+
+
+impl RemarkableDevice {
+    pub fn view(self, pm: Option<Param>, dev: Option<Device>) -> RemarkableDeviceView {
+        let d = dev.map(|d| d.view(None, None));
+        RemarkableDeviceView {
+            device: d,
+            param: pm,
+            sort: self.sort,
         }
     }
 }
