@@ -29,7 +29,9 @@ pub fn update_param(
     //   password: PassRequired,
 ) -> Result<JsonValue, RequestError> {
     // password.validate(&conn, &auth.mobile)?;
-    Err(RequestError::success())
+    Ok(json!(&param_update.value.as_str()))
+
+
     // let target = param.filter(crate::schema::param::id.eq(&param_update.id));
     // let result: Result<Param, _> = target.get_result::<Param>(&conn.0);
     // if let Ok(pm) = result {
