@@ -29,22 +29,21 @@ pub fn update_param(
     //   password: PassRequired,
 ) -> Result<JsonValue, RequestError> {
     // password.validate(&conn, &auth.mobile)?;
-    Ok(json!(&param_update.value.as_str()))
-
-
-    // let target = param.filter(crate::schema::param::id.eq(&param_update.id));
-    // let result: Result<Param, _> = target.get_result::<Param>(&conn.0);
-    // if let Ok(pm) = result {
-    //     if pm.out_id.is_some() {
-    //         match pm.param_type.as_str() {
-    //             "power" => { PowerSwitch::handle(&pm, &param_update.value, &conn.0) }
-    //             _ => {}
-    //         }
-    //         Err(RequestError::success())
-    //     } else {
-    //         Err(RequestError::internal_error())
-    //     }
-    // } else {
-    //     Err(RequestError::record_not_found())
-    // }
+    error!("{:?}", param_update.0);
+//    Ok(json!(&param_update.value.parse::<u8>().unwrap()))
+    let target = param.filter(crate::schema::param::id.eq(&param_update.id));
+    let result: Result<Param, _> = target.get_result::<Param>(&conn.0);
+    if let Ok(pm) = result {
+        if pm.out_id.is_some() {
+            match pm.param_type.as_str() {
+                "power" => { PowerSwitch::handle(&pm, &param_update.value, &conn.0) }
+                _ => {}
+            }
+            Err(RequestError::success())
+        } else {
+            Err(RequestError::internal_error())
+        }
+    } else {
+        Err(RequestError::record_not_found())
+    }
 }

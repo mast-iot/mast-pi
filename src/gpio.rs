@@ -9,10 +9,11 @@ use crate::config::DATABASE_URL;
 use crate::models::Output;
 
 const DS: u8 = 2;
-//to pin14
+//to  M66313 pin 9
 const SHCP: u8 = 3;
-// to pin11
-const STCP: u8 = 4; //to pin12
+//to  M66313 pin13
+const STCP: u8 = 4;
+//to  M66313 pin11
 
 lazy_static! {
  pub static ref GPIO : Arc<Mutex<Io>> = {
@@ -87,11 +88,12 @@ impl Io {
 
     pub fn output_and_flash(&mut self, address: u8, state: u8) {
         println!("address {} , state {}", address, state);
-        let mut op = 0u128;
-        op += state as u128;
-        op = op << 1 + (state ^ 1);
-        op <<= (address) * 2;
+        pos = address * 2 + state;
+        let mut op = 1u128;
+        op <<= pos;
         self.output = op;
+        self.flash_out();
+        self.output = 0u128;
         self.flash_out();
         ()
     }
